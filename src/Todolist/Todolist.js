@@ -109,6 +109,19 @@ export default function Todolist() {
         })
     }
 
+    const rejectTask = (task) => {
+        let promise = Axios({
+            url: `http://svcy.myclass.vn/api/ToDoList/rejectTask?taskName=${task.taskName}`,
+            method: 'PUT'
+        })
+        promise.then(() => {
+            getTaskList()
+        })
+        promise.catch((errors) => {
+            console.log(errors.response.data)
+        })
+    }
+
     const renderTaskToDo = () => {
         const res = state.taskList.filter(item => !item.status).map((item, index) => {
             return (
@@ -119,8 +132,7 @@ export default function Todolist() {
                             <i className="fa fa-trash-alt" />
                         </button>
                         <button className="complete " onClick={() => doneTask(item)}>
-                            <i className="far fa-check-circle" />
-                            <i className="fas fa-check-circle" />
+                            <i title='Done' className="far fa-check-circle" />
                         </button>
                     </div>
                 </li>
@@ -138,9 +150,8 @@ export default function Todolist() {
                         <button className="remove" onClick={() => delTask(item)}>
                             <i className="fa fa-trash-alt" />
                         </button>
-                        <button className="complete">
-                            <i className="far fa-check-circle" />
-                            <i className="fas fa-check-circle" />
+                        <button className="complete" onClick={() => rejectTask(item)}>
+                            <i title='Reject' className="fas fa-check-circle" />
                         </button>
                     </div>
                 </li>
@@ -154,13 +165,13 @@ export default function Todolist() {
             <div className='row'>
                 <div className="card col-lg-7 col-md-10 col-sm-10 text-center ">
                     <div className="card__header">
-                        <img src={require('./bg.png')} />
+                        <img src={require('./bg.png')} alt='background' />
                     </div>
                     <div className="card__body">
                         <div className="card__content">
                             <div className="card__title">
                                 <h2>My Tasks</h2>
-                                <p>September 9,2020</p>
+                                <p>July 30,2022</p>
                             </div>
                             <div className="card__add">
                                 <input id="newTask" type="text" placeholder="Enter an activity..." onChange={handleChange} />
@@ -171,10 +182,12 @@ export default function Todolist() {
                             <p style={{ color: 'red', paddingBottom: '0' }}>{state.errors.taskName}</p>
                             <div className="card__todo">
                                 {/* Uncompleted tasks */}
+                                <h5 style={{ textAlign: 'left' }}>Task To Do</h5>
                                 <ul className="todo" id="todo">
                                     {renderTaskToDo()}
                                 </ul>
                                 {/* Completed tasks */}
+                                <h5 className='mt-4' style={{ textAlign: 'left' }}>Task Complete</h5>
                                 <ul className="todo" id="completed">
                                     {renderTaskComplete()}
                                 </ul>
